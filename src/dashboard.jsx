@@ -150,7 +150,7 @@ const FilterDropdown = ({ label, value, options, onChange, disabled }) => (
 const AlertBanner = ({ type, children }) => {
   const bgColor = type === 'error' ? `${colors.semantic.danger}20` : `${colors.brand.gold}20`;
   const borderColor = type === 'error' ? colors.semantic.danger : colors.brand.gold;
-  
+
   return (
     <div style={{
       backgroundColor: bgColor,
@@ -194,14 +194,14 @@ const FileUpload = ({ onFileLoad }) => {
 
   const handleFile = useCallback((file) => {
     if (!file) return;
-    
+
     if (!file.name.endsWith('.csv')) {
       setError('Please upload a CSV file');
       return;
     }
-    
+
     setError(null);
-    
+
     Papa.parse(file, {
       header: true,
       dynamicTyping: true,
@@ -250,22 +250,22 @@ const FileUpload = ({ onFileLoad }) => {
         width: '100%',
         textAlign: 'center'
       }}>
-        <h1 style={{ 
-          color: colors.text.primary, 
-          fontSize: '32px', 
-          fontWeight: 300, 
-          marginBottom: '12px' 
+        <h1 style={{
+          color: colors.text.primary,
+          fontSize: '32px',
+          fontWeight: 300,
+          marginBottom: '12px'
         }}>
           Sales Data Explorer
         </h1>
-        <p style={{ 
-          color: colors.text.secondary, 
-          fontSize: '16px', 
-          marginBottom: '40px' 
+        <p style={{
+          color: colors.text.secondary,
+          fontSize: '16px',
+          marginBottom: '40px'
         }}>
           Upload your cleaned_data.csv to begin analysis
         </p>
-        
+
         <div
           onDrop={handleDrop}
           onDragOver={handleDragOver}
@@ -280,26 +280,26 @@ const FileUpload = ({ onFileLoad }) => {
           }}
           onClick={() => document.getElementById('file-input').click()}
         >
-          <div style={{ 
-            fontSize: '48px', 
+          <div style={{
+            fontSize: '48px',
             marginBottom: '16px',
             opacity: 0.7
           }}>📊</div>
-          <p style={{ 
-            color: colors.text.primary, 
-            fontSize: '16px', 
+          <p style={{
+            color: colors.text.primary,
+            fontSize: '16px',
             marginBottom: '8px',
             fontWeight: 500
           }}>
             Drop CSV file here
           </p>
-          <p style={{ 
-            color: colors.text.muted, 
-            fontSize: '14px' 
+          <p style={{
+            color: colors.text.muted,
+            fontSize: '14px'
           }}>
             or click to browse
           </p>
-          
+
           <input
             id="file-input"
             type="file"
@@ -308,7 +308,7 @@ const FileUpload = ({ onFileLoad }) => {
             style={{ display: 'none' }}
           />
         </div>
-        
+
         {error && (
           <div style={{
             marginTop: '20px',
@@ -321,11 +321,11 @@ const FileUpload = ({ onFileLoad }) => {
             {error}
           </div>
         )}
-        
-        <p style={{ 
-          color: colors.text.muted, 
-          fontSize: '12px', 
-          marginTop: '24px' 
+
+        <p style={{
+          color: colors.text.muted,
+          fontSize: '12px',
+          marginTop: '24px'
         }}>
           Expected columns: customer_id, city, state, zip, product, quantity, price, total_value, date, year_month
         </p>
@@ -354,7 +354,7 @@ const Dashboard = ({ rawData }) => {
     const months = [...new Set(data.map(d => d.year_month))].sort();
     const states = [...new Set(data.map(d => d.state).filter(Boolean))].sort();
     const products = [...new Set(data.map(d => d.product).filter(Boolean))].sort();
-    
+
     // Cities based on selected state
     let cities;
     if (selectedState === 'all') {
@@ -362,7 +362,7 @@ const Dashboard = ({ rawData }) => {
     } else {
       cities = [...new Set(data.filter(d => d.state === selectedState).map(d => d.city).filter(Boolean))].sort();
     }
-    
+
     return {
       months: [{ value: 'all', label: 'All Months' }, ...months.map(m => ({ value: m, label: getMonthName(m) }))],
       states: [{ value: 'all', label: 'All States' }, ...states.map(s => ({ value: s, label: s }))],
@@ -394,7 +394,7 @@ const Dashboard = ({ rawData }) => {
     const customers = new Set(filteredData.map(d => d.customer_id)).size;
     const transactions = filteredData.length;
     const avgTransaction = transactions > 0 ? revenue / transactions : 0;
-    
+
     return { revenue, units, customers, transactions, avgTransaction };
   }, [filteredData]);
 
@@ -410,12 +410,12 @@ const Dashboard = ({ rawData }) => {
     const grouped = {};
     filteredData.forEach(d => {
       if (!grouped[d.year_month]) {
-        grouped[d.year_month] = { 
+        grouped[d.year_month] = {
           yearMonth: d.year_month,
-          month: getMonthName(d.year_month), 
-          revenue: 0, 
-          units: 0, 
-          transactions: 0 
+          month: getMonthName(d.year_month),
+          revenue: 0,
+          units: 0,
+          transactions: 0
         };
       }
       grouped[d.year_month].revenue += d.total_value || 0;
@@ -506,7 +506,7 @@ const Dashboard = ({ rawData }) => {
             H2 2025 · {formatNumber(data.length)} sales records
           </p>
         </div>
-        
+
         {/* Filters */}
         <div style={{ display: 'flex', gap: '16px' }}>
           <FilterDropdown
@@ -549,8 +549,8 @@ const Dashboard = ({ rawData }) => {
         {anomalyDetected && (
           <div style={{ marginBottom: '24px' }}>
             <AlertBanner type="warning">
-              <strong>Data Anomaly Detected:</strong> August and September have identical revenue 
-              ({formatCurrency(anomalyValue)} each). This appears to be duplicate data — 
+              <strong>Data Anomaly Detected:</strong> August and September have identical revenue
+              ({formatCurrency(anomalyValue)} each). This appears to be duplicate data —
               all 10,480 records match exactly. One month should be excluded from analysis.
             </AlertBanner>
           </div>
@@ -611,33 +611,33 @@ const Dashboard = ({ rawData }) => {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={monthlyData} margin={{ top: 10, right: 30, left: 10, bottom: 10 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke={colors.chart.grid} vertical={false} />
-                  <XAxis 
-                    dataKey="month" 
+                  <XAxis
+                    dataKey="month"
                     stroke={colors.text.muted}
                     tick={{ fill: colors.text.secondary, fontSize: 12 }}
                   />
-                  <YAxis 
+                  <YAxis
                     stroke={colors.text.muted}
                     tick={{ fill: colors.text.secondary, fontSize: 11 }}
                     tickFormatter={formatCurrency}
                   />
                   <Tooltip content={<ChartTooltip />} />
                   {showAnomalyLine && (
-                    <ReferenceLine 
-                      y={anomalyValue} 
-                      stroke={colors.chart.anomaly} 
+                    <ReferenceLine
+                      y={anomalyValue}
+                      stroke={colors.chart.anomaly}
                       strokeDasharray="5 5"
-                      label={{ 
-                        value: 'Duplicate', 
-                        position: 'right', 
+                      label={{
+                        value: 'Duplicate',
+                        position: 'right',
                         fill: colors.chart.anomaly,
                         fontSize: 11
                       }}
                     />
                   )}
-                  <Line 
-                    type="monotone" 
-                    dataKey="revenue" 
+                  <Line
+                    type="monotone"
+                    dataKey="revenue"
                     stroke={colors.brand.teal}
                     strokeWidth={3}
                     dot={{ fill: colors.brand.teal, r: 5 }}
@@ -661,19 +661,19 @@ const Dashboard = ({ rawData }) => {
             </h3>
             <div style={{ height: '300px' }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={productData} 
+                <BarChart
+                  data={productData}
                   layout="vertical"
                   margin={{ top: 0, right: 20, left: 0, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke={colors.chart.grid} horizontal={true} vertical={false} />
-                  <XAxis 
+                  <XAxis
                     type="number"
                     stroke={colors.text.muted}
                     tick={{ fill: colors.text.secondary, fontSize: 10 }}
                     tickFormatter={formatCurrency}
                   />
-                  <YAxis 
+                  <YAxis
                     type="category"
                     dataKey="product"
                     stroke={colors.text.muted}
@@ -683,9 +683,9 @@ const Dashboard = ({ rawData }) => {
                   <Tooltip content={<ChartTooltip />} />
                   <Bar dataKey="revenue" radius={[0, 4, 4, 0]} name="Revenue">
                     {productData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={index === 0 ? colors.brand.purple : index < 4 ? colors.brand.teal : colors.chart.secondary} 
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={index === 0 ? colors.brand.purple : index < 4 ? colors.brand.teal : colors.chart.secondary}
                       />
                     ))}
                   </Bar>
@@ -713,17 +713,17 @@ const Dashboard = ({ rawData }) => {
             </h3>
             <div style={{ height: '300px' }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
+                <BarChart
                   data={stateData}
                   margin={{ top: 10, right: 30, left: 10, bottom: 10 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke={colors.chart.grid} vertical={false} />
-                  <XAxis 
+                  <XAxis
                     dataKey="state"
                     stroke={colors.text.muted}
                     tick={{ fill: colors.text.secondary, fontSize: 11 }}
                   />
-                  <YAxis 
+                  <YAxis
                     stroke={colors.text.muted}
                     tick={{ fill: colors.text.secondary, fontSize: 11 }}
                     tickFormatter={formatCurrency}
@@ -731,9 +731,9 @@ const Dashboard = ({ rawData }) => {
                   <Tooltip content={<ChartTooltip />} />
                   <Bar dataKey="revenue" radius={[4, 4, 0, 0]} name="Revenue">
                     {stateData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={index === 0 ? colors.brand.teal : index < 4 ? colors.brand.gold : colors.chart.secondary} 
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={index === 0 ? colors.brand.teal : index < 4 ? colors.brand.gold : colors.chart.secondary}
                       />
                     ))}
                   </Bar>
@@ -754,19 +754,19 @@ const Dashboard = ({ rawData }) => {
             </h3>
             <div style={{ height: '300px' }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
+                <BarChart
                   data={cityData}
                   layout="vertical"
                   margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke={colors.chart.grid} horizontal={true} vertical={false} />
-                  <XAxis 
+                  <XAxis
                     type="number"
                     stroke={colors.text.muted}
                     tick={{ fill: colors.text.secondary, fontSize: 10 }}
                     tickFormatter={formatCurrency}
                   />
-                  <YAxis 
+                  <YAxis
                     type="category"
                     dataKey="city"
                     stroke={colors.text.muted}
@@ -776,9 +776,9 @@ const Dashboard = ({ rawData }) => {
                   <Tooltip content={<ChartTooltip />} />
                   <Bar dataKey="revenue" radius={[0, 4, 4, 0]} name="Revenue">
                     {cityData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={index === 0 ? colors.brand.teal : index < 3 ? colors.brand.gold : colors.chart.secondary} 
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={index === 0 ? colors.brand.teal : index < 3 ? colors.brand.gold : colors.chart.secondary}
                       />
                     ))}
                   </Bar>
@@ -801,26 +801,26 @@ const Dashboard = ({ rawData }) => {
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
             {[
-              { 
-                label: 'Zero Qty Excluded', 
+              {
+                label: 'Zero Qty Excluded',
                 value: excludedCount,
                 pct: ((excludedCount / rawData.length) * 100).toFixed(1),
                 highlight: true
               },
-              { 
-                label: 'Missing Location', 
+              {
+                label: 'Missing Location',
                 value: data.filter(d => !d.city || !d.state || !d.zip).length,
                 pct: ((data.filter(d => !d.city || !d.state || !d.zip).length / data.length) * 100).toFixed(1),
                 highlight: false
               },
-              { 
-                label: 'APO/DPO Records (AE)', 
+              {
+                label: 'APO/DPO Records (AE)',
                 value: data.filter(d => d.state === 'AE').length,
                 pct: '-',
                 highlight: false
               },
-              { 
-                label: 'June (Single Day)', 
+              {
+                label: 'June (Single Day)',
                 value: data.filter(d => d.year_month === '2025-06').length,
                 pct: ((data.filter(d => d.year_month === '2025-06').length / data.length) * 100).toFixed(1),
                 highlight: false
@@ -851,7 +851,9 @@ const Dashboard = ({ rawData }) => {
 export default function InteractiveSalesDashboard() {
   const [rawData, setRawData] = useState(null);
 
-  const handleFileLoad = useCallback((parsedData) => {
+  const [loading, setLoading] = useState(true);
+
+  const processData = useCallback((parsedData) => {
     // Clean and validate data
     const cleanedData = parsedData.map(row => ({
       ...row,
@@ -860,7 +862,53 @@ export default function InteractiveSalesDashboard() {
       price: parseFloat(row.price) || 0
     }));
     setRawData(cleanedData);
+    setLoading(false);
   }, []);
+
+  const handleFileLoad = useCallback((parsedData) => {
+    processData(parsedData);
+  }, [processData]);
+
+  // Auto-load data
+  useEffect(() => {
+    console.log("Auto-loading CSV...");
+    fetch(import.meta.env.BASE_URL + 'cleaned_data.csv')
+      .then(response => {
+        if (!response.ok) throw new Error("File not found");
+        return response.text();
+      })
+      .then(csvText => {
+        Papa.parse(csvText, {
+          header: true,
+          dynamicTyping: true,
+          skipEmptyLines: true,
+          complete: (results) => {
+            if (results.errors.length > 0) {
+              console.error("Parse error:", results.errors);
+              setLoading(false);
+            } else {
+              processData(results.data);
+            }
+          },
+          error: (err) => {
+            console.error("Error parsing CSV:", err);
+            setLoading(false);
+          }
+        });
+      })
+      .catch(err => {
+        console.warn("Auto-load failed:", err);
+        setLoading(false);
+      });
+  }, [processData]);
+
+  if (loading) {
+    return (
+      <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        Loading data...
+      </div>
+    );
+  }
 
   if (!rawData) {
     return <FileUpload onFileLoad={handleFileLoad} />;
